@@ -1,0 +1,54 @@
+{
+    "metaDataVersion": "1.0.0",
+    "category": "com.microchip.ide.project",
+    "content": {
+        "metaDataVersion": "1.3.0",
+        "name": "com.microchip.mcu8.mplabx.project.pic16f17146-adcc-getting-started-mplab-mcc",
+        "version": "1.0.0",
+        "displayName": "Getting Started with ADCC modes on PIC16F17146 Microcontroller",
+        "projectName": "pic16f17146-adcc-getting-started-mplab-mcc",
+        "shortDescription": "This code example demonstrates usage of various ADCC modes of PIC microcontroller. Compatible PIC16F17146 and PIC16F18146 family of MCUs are: PIC16F17146, PIC16F17125, PIC16F17114, PIC16F18146, PIC16F18125, PIC16F18114",
+        "ide": {
+            "name": "MPLAB X",
+            "semverRange": ">=6.0.0"
+        },
+        "compiler": [
+            {
+                "name": "XC8",
+                "semverRange": "^2.36.0"
+            }
+        ],
+        "dfp": {
+            "name": "PIC16F1xxxx_DFP",
+            "semverRange": "^1.13.178"
+        },
+        "configurator": {
+            "name": "MCC",
+            "semverRange": ">=5.1.1"
+        },
+        "device": {
+            "metaDataVersion": "1.0.0",
+            "category": "com.microchip.portal.contentRef",
+            "content": {
+                "metaDataVersion": "1.0.0",
+                "category": "com.microchip.device",
+                "name": "PIC16F17146",
+                "versionRange": "*"
+            }
+        },
+        "author": "Irene Mary Abraham",
+        "peripherals": ["ADCC"],
+        "keywords": ["Internal Temperature Sensor","Melody"],
+        "additionalData": {
+            "longDescription": {
+                "metaDataVersion": "1.0.0",
+                "category": "com.microchip.portal.fileRef",
+                "content": {
+                    "metaDataVersion": "1.0.0",
+                    "fileName": "./README.md",
+                    "mimeType": "text/markdown"
+                }
+            }
+        }
+    }
+}
