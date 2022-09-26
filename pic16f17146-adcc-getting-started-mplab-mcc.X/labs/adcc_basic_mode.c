@@ -41,7 +41,7 @@
 #include "../mcc_generated_files/system/system.h"
 #include "adcc_labs.h"
 
-// Comment below #defines for terminal view of the results in Basic mode
+//Comment below #defines for terminal view of the results in Basic mode
 #define GRAPH_BASIC
 
 #define DELAY_100MS (100) // Wait before reading ADC till update interval of 100 ms in graph view
@@ -63,14 +63,14 @@
   @Returns
     None
  */
-void AdcBasicMode(bool initRequired)
+void AdccBasicMode(bool initRequired)
 {
     uint16_t adcResult;
 
     if (initRequired == true)
     {
-        printf("\r\n\n\nLab 1: ADC in Basic mode");
-        printf("\r\n\nPress switch S1 to go to the next lab.");
+        printf("\r\n\n\nLab 1: ADCC in Basic mode");
+        printf("\r\n\nPress switch SW0 to go to the next lab.");
         ADCC_Initialize_Basic_mode();
     }
     adcResult = ADCC_GetSingleConversion(Ambient_AN); // Read the ADC result from the analog channel corresponding to ambient light 
@@ -80,40 +80,46 @@ void AdcBasicMode(bool initRequired)
     while (!(UART1.IsTxReady()));
     UART1.Write(START_OF_FRAME); // Command sent to the Data Visualizer, 0x5F = Start                                              
     while (!(UART1.IsTxReady()));
-    UART1.Write(ZERO); // ADC conversion Count
+    UART1.Write(ZERO); // ADCC conversion Count
     while (!(UART1.IsTxReady()));
-    UART1.Write(ADRESL); // ADC Result low byte as visualizer reads low byte first 
+    UART1.Write(ADRESL); // ADCC Result low byte as visualizer reads low byte first 
     while (!(UART1.IsTxReady()));
-    UART1.Write(ADRESH); // ADC Result high byte
+    UART1.Write(ADRESH); // ADCC Result high byte
     while (!(UART1.IsTxReady()));
-    UART1.Write(ZERO); // ADC Accumulator low byte 
+    UART1.Write(ZERO); // ADCC Accumulator low byte 
     while (!(UART1.IsTxReady()));
-    UART1.Write(ZERO); // ADC Accumulator high byte
+    UART1.Write(ZERO); // ADCC Accumulator high byte
     while (!(UART1.IsTxReady()));
-    UART1.Write(ZERO); // ADC Filter low byte  
+    UART1.Write(ZERO); // ADCC Filter low byte  
     while (!(UART1.IsTxReady()));
-    UART1.Write(ZERO); // ADC Filter high byte  
+    UART1.Write(ZERO); // ADCC Filter high byte  
     while (!(UART1.IsTxReady()));
     UART1.Write(lightIntensityLowByte); // Light Intensity low byte
     while (!(UART1.IsTxReady()));
     UART1.Write(lightIntensityHighByte); // Light Intensity high byte
     while (!(UART1.IsTxReady()));
     UART1.Write(END_OF_FRAME); // Command sent to the Data Visualizer, 0xA0 = End      
-    __delay_ms(DELAY_100MS); // Wait before reading ADC till update interval of 100 ms in graph view
+    __delay_ms(DELAY_100MS); // Wait before reading ADCC till update interval of 100 ms in graph view
 #else
-    printf("\r\n\nADC result in basic mode is %d", adcResult);
+    printf("\r\n\nADCC result in basic mode is %d", adcResult);
     printf("\r\nLight Intensity = %d lx", lightIntensity);
-    __delay_ms(DELAY_1S); //wait before reading ADC till update interval of 1 Second in terminal view
+    __delay_ms(DELAY_1S); //wait before reading ADCC till update interval of 1 Second in terminal view
 #endif
 }
 
 /**
-This function initializes ADCC in basic mode
+  @Summary
+    This function initializes ADCC in basic mode
+  @Description
  * ADCC mode: basic, 
- * ADC Clock =FOSC/2, 
- * Voltage reference for ADC = VDD
-@param none 
-\returns none 
+ * ADCC Clock = FOSC/4, 
+ * Voltage reference for ADCC = FVR (2.048V)
+  @Preconditions
+    none
+  @Param
+    none
+  @Returns
+    None
  */
 void ADCC_Initialize_Basic_mode(void)
 {
@@ -156,12 +162,12 @@ void ADCC_Initialize_Basic_mode(void)
     ADCON3 = 0x00;
     // ADMATH registers not updated; 
     ADSTAT = 0x00;
-    // ADNREF VSS; ADPREF VDD; 
-    ADREF = 0x00;
+    //ADPREF FVR; 
+    ADREF = 0x3;
     // ADACT disabled; 
     ADACT = 0x00;
-    // ADCS FOSC/2; 
-    ADCLK = 0x00;
+    //ADCCS FOSC/4; 
+    ADCLK = 0x1;
     //GO_nDONE undefined; ADIC single-ended mode; ADFM right justified; ADCS FOSC; ADCONT disabled; ADON enabled; 
     ADCON0 = 0x84;
 

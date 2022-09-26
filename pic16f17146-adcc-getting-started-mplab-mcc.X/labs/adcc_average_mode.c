@@ -57,8 +57,8 @@
   @Summary
     Performs the ADCC Average mode Lab.
   @Description
- Read the analog channel connected to Ambient Light sensor using ADCC in Average mode.
- * Display the ADC conversion count, ADC results, ADC accumulator, ADC filtered value and 
+ * Read the analog channel connected to Ambient Light sensor using ADCC in Average mode.
+ * Display the ADCC conversion count, ADC results, ADC accumulator, ADCC filtered value and 
  * corresponding Light intensity on graph or terminal window. * 
   @Preconditions
     SYSTEM_Initialize() functions should have been called before calling this function.
@@ -76,7 +76,7 @@ void AdccAverageMode(bool initRequired)
     if (initRequired == true)
     {
         printf("\r\n\nLab 3: ADCC in Average mode");
-        printf("\r\n\nPress switch S1 to go to the next lab.");
+        printf("\r\n\nPress switch SW0 to go to the next lab.");
         Timer2_PeriodCountSet(TIMER_PERIOD); // Set ADC auto trigger interval for terminal/graphical view
         Timer2_Start();
         ADCC_Initialize_Average_Mode();
@@ -88,19 +88,19 @@ void AdccAverageMode(bool initRequired)
         while (!(UART1.IsTxReady()));
         UART1.Write(START_OF_FRAME); // Command sent to the Data Visualizer, 0x5F = Start                                              
         while (!(UART1.IsTxReady()));
-        UART1.Write(ADCNT); // ADC conversion Count
+        UART1.Write(ADCNT); // ADCC conversion Count
         while (!(UART1.IsTxReady()));
-        UART1.Write(ADRESL); // ADC Result low byte as visualizer reads low byte first 
+        UART1.Write(ADRESL); // ADCC Result low byte as visualizer reads low byte first 
         while (!(UART1.IsTxReady()));
-        UART1.Write(ADRESH); // ADC Result high byte
+        UART1.Write(ADRESH); // ADCC Result high byte
         while (!(UART1.IsTxReady()));
-        UART1.Write(ADACCL); // ADC Accumulator low byte 
+        UART1.Write(ADACCL); // ADCC Accumulator low byte 
         while (!(UART1.IsTxReady()));
-        UART1.Write(ADACCH); // ADC Accumulator high byte
+        UART1.Write(ADACCH); // ADCC Accumulator high byte
         while (!(UART1.IsTxReady()));
-        UART1.Write(ADFLTRL); // ADC Filter low byte  
+        UART1.Write(ADFLTRL); // ADCC Filter low byte  
         while (!(UART1.IsTxReady()));
-        UART1.Write(ADFLTRH); // ADC Filter high byte  
+        UART1.Write(ADFLTRH); // ADCC Filter high byte  
         while (!(UART1.IsTxReady()));
         UART1.Write(lightIntensityLowByte); // Light Intensity low byte
         while (!(UART1.IsTxReady()));
@@ -116,10 +116,10 @@ void AdccAverageMode(bool initRequired)
         printf("\r\nADC Accumulator= %lu", (uint32_t) adcAccumulator);
         printf("\r\nADC Filter=%d", adcFilter);
 #endif   
-        if (ADCNT == ADRPT)// If ADC conversion count is equal to number of repetitions, use ADC filter value (average) for calculating the light intensity  
+        if (ADCNT == ADRPT)// If ADCC conversion count is equal to number of repetitions, use ADCC filter value (average) for calculating the light intensity  
         {
-            adcFilter = ADCC_GetFilterValue(); // Read average ADC value
-            CalculateLightIntensity(adcFilter); // Calculate light intensity from average ADC reading
+            adcFilter = ADCC_GetFilterValue(); // Read average ADCC value
+            CalculateLightIntensity(adcFilter); // Calculate light intensity from average ADCC reading
 #ifndef GRAPH_AVERAGE
             printf("\r\n\n\nLab3: Average mode. Average of %d ADC results is %d", ADRPT, adcFilter);
             printf("\r\nLight Intensity = %d lx", lightIntensity);
@@ -130,12 +130,18 @@ void AdccAverageMode(bool initRequired)
 }
 
 /**
-This function initializes ADCC in Average mode,
- * ADCC mode: Average, ADC result right shift count = 4, ADC repeat count=16 for average of 16 ADC result counts, 
- * Voltage reference for ADC = VDD,
- * auto trigger using timer 2 overflow, Enable ADC conversion done interrupt
-@param none 
-\returns none 
+  @Summary
+    This function initializes ADCC in Average mode
+  @Description
+ * ADCC mode: Average, ADC result right shift count = 4, ADC repeat count=16 for average of 16 ADCC result counts, 
+ * Voltage reference for ADCC = FVR (2.048V),
+ * auto trigger using timer 2 overflow, Enable ADCC conversion done interrupt
+  @Preconditions
+    none
+  @Param
+    none
+  @Returns
+    None
  */
 void ADCC_Initialize_Average_Mode(void)
 {
@@ -178,12 +184,12 @@ void ADCC_Initialize_Average_Mode(void)
     ADCON3 = 0x52;
     // ADMATH registers not updated; 
     ADSTAT = 0x00;
-    // ADNREF VSS; ADPREF VDD; 
-    ADREF = 0x00;
+    //ADPREF FVR; 
+    ADREF = 0x3;
     // ADACT TMR2; 
     ADACT = 0x04;
-    // ADCS FOSC/2; 
-    ADCLK = 0x00;
+    //ADCCS FOSC/4; 
+    ADCLK = 0x1;
     //GO_nDONE undefined; ADIC single-ended mode; ADFM right justified; ADCS FOSC; ADCONT disabled; ADON enabled; 
     ADCON0 = 0x84;
 
@@ -196,7 +202,6 @@ void ADCC_Initialize_Average_Mode(void)
     PIR6bits.ADTIF = 0;
     //  Disabling ADCC threshold interrupt.
     PIE6bits.ADTIE = 0;
-
 }
 /**
  End of File

@@ -58,8 +58,8 @@
   @Summary
     Performs the ADCC Burst Average mode Lab.
   @Description
- Read the analog channel connected to Ambient Light sensor using ADCC in Burst Average mode.
- * Display the ADC filtered value and corresponding Light intensity on graph or terminal window. * 
+ * Read the analog channel connected to Ambient Light sensor using ADCC in Burst Average mode.
+ * Display the ADCC filtered value and corresponding Light intensity on graph or terminal window. * 
   @Preconditions
     SYSTEM_Initialize() functions should have been called before calling this function.
   @Param
@@ -118,14 +118,20 @@ void AdccBurstAverageMode(bool initRequired)
 }
 
 /**
-This function initializes ADCC in Burst Average mode
+  @Summary
+    This function initializes ADCC in Burst Average mode
+  @Description
  * ADCC mode: burst average, 
- * average of 16 ADC results, 
- * Voltage reference for ADC = VDD,
- * ADC auto trigger using timer 2 overflow, 
- * Enable ADC conversion done interrupt
-@param none 
-\returns none 
+ * average of 16 ADCC results, 
+ * Voltage reference for ADC = FVR (2.048V),
+ * ADCC auto trigger using timer 2 overflow, 
+ * Enable ADCC conversion done interrupt
+  @Preconditions
+    none
+  @Param
+    none
+  @Returns
+    None
  */
 void ADCC_Initialize_Burst_Average_Mode(void)
 {
@@ -168,12 +174,12 @@ void ADCC_Initialize_Burst_Average_Mode(void)
     ADCON3 = 0x57;
     // ADMATH registers not updated; 
     ADSTAT = 0x00;
-    // ADNREF VSS; ADPREF VDD; 
-    ADREF = 0x00;
+    //ADPREF FVR; 
+    ADREF = 0x3;
     // ADACT TMR2; 
     ADACT = 0x04;
-    // ADCS FOSC/2; 
-    ADCLK = 0x00;
+    //ADCCS FOSC/4; 
+    ADCLK = 0x1;
     //GO_nDONE undefined; ADIC single-ended mode; ADFM right justified; ADCS FOSC; ADCONT disabled; ADON enabled; 
     ADCON0 = 0x84;
 
@@ -186,7 +192,6 @@ void ADCC_Initialize_Burst_Average_Mode(void)
     PIR6bits.ADTIF = 0;
     //  Disabling ADCC threshold interrupt.
     PIE6bits.ADTIE = 1;
-
 }
 /**
  End of File

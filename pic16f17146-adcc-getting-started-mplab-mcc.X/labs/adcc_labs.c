@@ -22,6 +22,7 @@
 #include "adcc_labs.h"
 #include "../mcc_generated_files/system/system.h"
 
+#define MASK_LOWER_BYTE (0x00FF)
 #define SIGN_BIT (0x2000) // Sign bit position for 14 bit data
 #define EXTEND_SIGN_BIT (0xC000)
 
@@ -102,7 +103,7 @@ void AdccLabsApplication(void)
 
     switch (lab)
     {
-    case BASIC: AdcBasicMode(initializationRequired);
+    case BASIC: AdccBasicMode(initializationRequired);
         break;
     case ACCUMULATE: AdccAccumulateMode(initializationRequired);
         break;
@@ -111,6 +112,8 @@ void AdccLabsApplication(void)
     case BURST_AVERAGE: AdccBurstAverageMode(initializationRequired);
         break;
     case LOW_PASS_FILTER: AdccLowPassFilterMode(initializationRequired);
+        break;
+    case DIFFERENTIAL: AdccDifferentialMode(initializationRequired);
         break;
     case SLEEP_MODE: AdccInSleepMode(initializationRequired);
         break;

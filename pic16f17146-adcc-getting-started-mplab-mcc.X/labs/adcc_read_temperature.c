@@ -74,7 +74,7 @@ uint16_t DIA_ReadWord(uint16_t diaAddr);
   @Summary
     Performs the ADCC Read Temperature Indicator module Lab.
   @Description
- Read the analog channel connected to internal temperature indicator module using ADCC in Burst Average mode.
+ * Read the analog channel connected to internal temperature indicator module using ADCC in Burst Average mode.
  * Display the Temperature in degree Celsius and Fahrenheit on the terminal window.
   @Preconditions
     SYSTEM_Initialize() functions should have been called before calling this function.
@@ -91,17 +91,17 @@ void AdccReadTemperatureIndicator(bool initRequired)
     if (initRequired == true)
     {
         LED0_SetHigh(); // Turn OFF LED
-        printf("\r\n\n\nLab 7: ADCC read temperature indicator");
-        printf("\r\n\nPress switch S1 to go to the next lab.");
+        printf("\r\n\n\nLab 8: ADCC read temperature indicator");
+        printf("\r\n\nPress switch SW0 to go to the next lab.");
         // Read Flash locations where temperature indicator parameters are stored        
         gain = (int16_t) (DIA_ReadWord(ADDR_TSHR1));
         adcReading90deg = DIA_ReadWord(ADDR_TSHR2); // ADC reading for 90 degree C
         offset = (int16_t) (DIA_ReadWord(ADDR_TSHR3));
 
 #ifdef DEBUG_TEMPERATURE
-        printf("\r\n Gain = %d", gain);
-        printf("\r\n offset = %d", offset);
-        printf("\r\n adcReading90deg = %d", adcReading90deg);
+        printf("\r\nGain = %d", gain);
+        printf("\r\noffset = %d", offset);
+        printf("\r\nadcReading90deg = %d", adcReading90deg);
 #endif
 
         // Check if there is ADC conversion done from previous lab if so ignore the results
@@ -123,9 +123,9 @@ void AdccReadTemperatureIndicator(bool initRequired)
         CalculateTemperature(adcFilter); // Calculate temperature from average ADC reading   
 
 #ifdef DEBUG_TEMPERATURE
-        printf("\r\n\n adcFilter=%d", adcFilter);
+        printf("\r\n\nadcFilter=%d", adcFilter);
 #endif
-        printf("\r\n\nTemperature in Celsius = %ld degree C", (int32_t) celsiusValue);
+        printf("\r\nTemperature in Celsius = %ld degree C", (int32_t) celsiusValue);
         printf("\r\nTemperature in Fahrenheit = %d degree F", fahrenheitValue);
 
         adcConversionDoneFlag = false;
@@ -133,11 +133,17 @@ void AdccReadTemperatureIndicator(bool initRequired)
 }
 
 /**
-This function initializes ADC for reading temperature indicator module,
- *  ADCC mode burst average, average of 16 ADC results, Voltage reference for ADC = FVR 2.048V,
- * ADC acquisition time = 25 us, auto trigger using timer 2 overflow, Enable ADC conversion done interrupt
-@param none 
-\returns none 
+  @Summary
+    This function initializes ADC for reading temperature indicator module
+  @Description
+ * ADCC mode burst average, average of 16 ADCC results, Voltage reference for ADCC = FVR (2.048V)
+ * ADCC acquisition time = 25 us, auto trigger using timer 2 overflow, Enable ADCC conversion done interrupt
+  @Preconditions
+    none
+  @Param
+    none
+  @Returns
+    None
  */
 void ADCC_Initialize_TemperatureIndicator(void)
 {
@@ -180,12 +186,12 @@ void ADCC_Initialize_TemperatureIndicator(void)
     ADCON3 = 0x52;
     // ADMATH registers not updated; 
     ADSTAT = 0x00;
-    // ADNREF VSS; ADPREF FVR; 
-    ADREF = 0x03;
+    //ADPREF FVR; 
+    ADREF = 0x3;
     // ADACT TMR2; 
     ADACT = 0x04;
-    // ADCS FOSC/2; 
-    ADCLK = 0x00;
+    //ADCCS FOSC/4; 
+    ADCLK = 0x1;
     //GO_nDONE undefined; ADIC single-ended mode; ADFM right justified; ADCS FOSC; ADCONT disabled; ADON enabled; 
     ADCON0 = 0x84;
 
@@ -204,10 +210,16 @@ void ADCC_Initialize_TemperatureIndicator(void)
 }
 
 /**
-This function converts measured ADC result into equivalent temperature in Celsius and Fahrenheit
- * temperature=(((ADC result*gain)/256)+offset)/10
-@param adcAverageResult - measured ADC result by reading temperature indicator module 
-\returns none 
+  @Summary
+    This function converts measured ADC result into equivalent temperature in Celsius and Fahrenheit
+  @Description
+ *  temperature=(((ADC result*gain)/256)+offset)/10
+  @Preconditions
+    none
+  @Param
+    none
+  @Returns
+    None
  */
 void CalculateTemperature(uint16_t adcAverageResult)
 {

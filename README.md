@@ -20,8 +20,9 @@ The following labs are designed for demonstrating various modes and features of 
 - Lab 3: Average mode
 - Lab 4: Burst Average mode
 - Lab 5: Low Pass Filter mode
-- Lab 6: Operation in Sleep mode with Continuous Sampling and Threshold comparison
-- Lab 7: Read Internal Temperature Indicator
+- Lab 6: Differential Mode
+- Lab 7: Operation in Sleep mode with Continuous Sampling and Threshold comparison
+- Lab 8: Read Internal Temperature Indicator
 
 ![Block_diagram](images/Block_diagram.png)
 
@@ -30,11 +31,11 @@ The following labs are designed for demonstrating various modes and features of 
 - MPLAB® X IDE [v6.00 or newer](https://www.microchip.com/mplab/mplab-x-ide)
 - XC8 Compiler [v2.35.0 or newer](https://www.microchip.com/mplab/compilers)
 - MPLAB® Code Configurator (MCC) [v5.1.2  or newer](https://www.microchip.com/mplab/mplab-code-configurator)
-- Microchip PIC16F1xxxx Series Device Support [v1.13.178 or newer](https://packs.download.microchip.com/)
+- Microchip PIC16F1xxxx Series Device Support [v1.14.187 or newer](https://packs.download.microchip.com/)
 
 ## Hardware Used
 
-- PIC16F17146 Curiosity Nano
+- [PIC16F17146 Curiosity Nano](https://www.microchip.com/en-us/development-tool/EV72J15A)
 - [Curiosity Nano base board](https://www.microchip.com/development-tool/AC164162)
 - [Ambient 7 Click](https://www.mikroe.com/ambient-7-click)
 
@@ -49,7 +50,7 @@ PIC16F17146 Curiosity Nano board is used as development platform in this example
 |Microcontroller Pin| Signal Description |
 |:------------------:|:-----------------:|
 | RA2| Light sensor output from Ambient 7 Click board |
-| RC0|Switch - SW1 |
+| RC0|Switch - SW0 |
 | RC1 | LED - LED0 |
 | RB7| UART TX|
 | RB5 | UART RX |
@@ -76,8 +77,8 @@ To see the messages in terminal window, curiosity nano board needs to be connect
 
 Open the Data Visualizer tool which is available as a plugin in MPLAB X IDE.
 1.	Click on the **Connections** --> **Serial Ports** tab.
-2.	Open COM6 Settings window by clicking on COM6 tab. Set the Baud Rate to **19200**. Click Apply
-Note: COM port number can be different depending on the availability of port
+2.	Open COM6 Settings window by clicking on **COM6** tab. Set the Baud Rate to **19200**. Click **Apply**.
+*Note: COM port number can be different depending on the availability of port.*
 3.	Click on **downward triangle symbol on COM6** tab and select **Send to Terminal** option to start a connection.
 
 ![terminal](images/terminal.png)
@@ -88,16 +89,16 @@ To visualize the ADCC readings in graphical format, time plot of Data Visualizer
 
 Open the Data Visualizer tool which is available as a plugin in MPLAB X IDE.
 1.	Click on the **Connections** --> **Serial Ports tab**.
-2.	Open COM6 Settings window by clicking on COM7 tab. Set the Baud Rate to **19200**. Click Apply.
+2.	Open COM6 Settings window by clicking on **COM7** tab. Set the Baud Rate to **19200**. Click **Apply**.
 
-    Note: COM port number can be different depending on the availability of port.
+*Note: COM port number can be different depending on the availability of port.*
 
 3.	Click on **right aligned triangle symbol** on COM7 tab.
 4.	Click on **Variable Streamer**.
 5.  Click on **New Variable Streamer**.
 6.	Add new variables as shown in image below and Click on **Save**.
 7.  Select **source of the plot** as **COM7** port.
-8.	Add plot for **ADCNT** (Uint8), **ADRES**(Uint16), **ADACC**(Uint16), **ADFLTR**(Uint16) and **Light intensity**(Uint16).
+8.	Add plot for **ADCNT** (Uint8), **ADRES**(Uint16), **ADACC**(Uint16), **ADFLTR**(Uint16) and **Light intensity**(Uint16) as shown below for Labs 1 to 5 only. For Lab 6 , add plot for **Channel 1 Single-ended(Ambient light sensor)** (Uint16), **Channel 2 Single-ended(FVR)** (Uint16) and **Differential ADC Result** (Int16).
 
 ![time_plot](images/time_plot.png)
 
@@ -130,7 +131,7 @@ Press switch SW0 to execute the next lab 2 ADCC Accumulate mode.
 - Upon ADCC conversion done interrupt, ADCC conversion count (ADCNT), ADCC Result register (ADRES), ADCC accumulator (ADACC), ADCC filter register (ADFLT) values are sent to the data visualizer using UART.
 - When ADCNT = No. of ADCC results to be accumulated the ADCNT and accumulator (ADACC) values are cleared in the FW. At this instance, the filtered value will be equal to the average of no. of ADCC results to be accumulated. Light intensity is calculated by using the filtered value.
 
-ADCC Count, ADCC result, ADCC accumulator value, ADCC filtered value and averaged value of 16 samples corresponding to the Ambient light and converted Ambient light intensity will be displayed on the time plot window in graphical format every 100 ms.
+ADCC Count, ADCC result, ADCC accumulator value, ADCC filtered value and averaged value of 16 samples corresponding to the ambient light and converted ambient light intensity will be displayed on the time plot window in graphical format every 100 ms.
 
 ![ADCC_Accumulate](images/accumulate_graph.gif)
 
@@ -144,7 +145,7 @@ Press switch SW0 to execute the next lab 3 ADCC Average mode.
 -  Upon ADCC conversion done interrupt, ADCC conversion count (ADCNT), ADCC Result register (ADRES), ADCC accumulator (ADACC), ADCC filter register (ADFLT) values are sent to the data visualizer using UART.
 - When ADCNT = ADCC repeat count (ADRPT) the ADCNT, the filtered value will be equal to the average of no. of ADCC results to be accumulated. Light intensity is calculated by using the filtered value.
 
-ADCC Count, ADCC result, ADCC accumulator value, ADCC filtered value and averaged value of ADRPT samples (16) corresponding to the Ambient light and converted Ambient light intensity will be displayed on the time plot window in graphical format every 100 ms.
+ADCC Count, ADCC result, ADCC accumulator value, ADCC filtered value and averaged value of ADRPT samples (16) corresponding to the ambient light and converted ambient light intensity will be displayed on the time plot window in graphical format every 100 ms.
 
 ![ADCC_Average](images/average_graph.gif)
 
@@ -155,9 +156,9 @@ Press switch SW0 to execute the next lab 4 ADCC Burst Average mode.
 - This lab demonstrates ADCC Burst Average mode.
 - 16 continuous samples are acquired and averaged at each ADCC trigger with ADCC Repeat Count (ADRPT) of 16 and Accumulator Right Shift (ADCRS) value of 4. Upon ADCC conversion done interrupt, the ADCC filter register (ADFLT) value will be equal to the average of no. of ADCC results. Light intensity is calculated using the filtered value.
 
-**Note:** In burst average mode, ADCC Threshold Interrupt  is enabled to generate an interrupt at conversion of 16 samples with each ADCC trigger.
+*Note: In burst average mode, ADCC Threshold Interrupt  is enabled to generate an interrupt at conversion of 16 samples with each ADCC trigger.*
 
-ADCC filtered value i.e., averaged value of ADRPT (16) continuous samples corresponding to the Ambient light and converted Ambient light intensity will be displayed on the time plot window in graphical format every 100 ms.
+ADCC filtered value i.e., averaged value of ADRPT (16) continuous samples corresponding to the ambient light and converted ambient light intensity will be displayed on the time plot window in graphical format every 100 ms.
 
 ![ADCC_BurstAverage](images/burst_average_graph.gif)
 
@@ -182,13 +183,27 @@ Where T = total sampling time, which is the time required to acquire a single-fi
 | 6 | 0.016 | 0.025|
 | 7 | 0.0078 |0.012 |
 
-ADCC result, ADCC filtered value corresponding to the Ambient light and converted Ambient light intensity will be updated to the time plot window in graphical format every 100 ms.
+ADCC result, ADCC filtered value corresponding to the ambient light and converted ambient light intensity will be updated to the time plot window in graphical format every 100 ms.
 
 ![ADCC_LPF](images/lpf_graph.gif)
 
-Press switch SW0 to execute the next lab 6 ADCC operation in sleep mode.
+Press switch SW0 to execute the next lab 6 ADCC operation in differential mode.
 
-#### Lab 6: ADCC operation in Sleep mode using Continuous sampling and Threshold comparison
+#### Lab 6: Differential Mode
+
+- This lab demonstrates how to configure ADCC in differential mode.
+- In differential mode, the ADCC measures the voltage difference between the positive and negative input channels.  
+- This lab demonstrates single ended ADC measurement of both ambient light sensor and FVR output voltage. Further, it shows the differential mode measurement between these channels.
+- In differential mode, ambient light sensor is connected to positive channel of ADCC.  A constant voltage of 1.024V supplied by FVR is connected to negative channel of ADCC. When ambient light sensor output is more than FVR output , ADC result is in positive range. When ambient sensor output is less than FVR output, ADC result is in negative range.
+- To operate ADC in differential mode, set the ADC Input Configuration (IC) bit of ADCON0 to 1
+
+Single-ended ADC result corresponding to ambient light sensor (Channel 1), FVR (Channel 2) and differential ADC Result will be updated to the time plot window in graphical format every 100 ms.
+
+![ADCC_DIFFERENTIAL](images/differential_graph.gif)
+
+Press switch SW0 to execute the next lab 7 ADCC operation in sleep mode
+
+#### Lab 7: ADCC operation in Sleep mode using Continuous sampling and Threshold comparison
 
 - This lab shows the operation of ADCC in microcontroller sleep mode with ADCC continuous sampling and threshold comparison feature.
 - Enabling sleep mode text will be displayed on the terminal window before microcontroller goes to sleep mode. LED0 will be turned OFF when microcontroller is in sleep mode and turned ON when microcontroller wakes up from the sleep mode upon ADCC threshold interrupt.
@@ -198,9 +213,9 @@ Press switch SW0 to execute the next lab 6 ADCC operation in sleep mode.
 
 ![ADCC_Sleep](images/sleep_mode.png)
 
-Press switch SW0 to execute the next lab 7 ADCC read internal temperature indicator.
+Press switch SW0 to execute the next lab 8 ADCC read internal temperature indicator.
 
-#### Lab 7: ADCC Read Internal Temperature Indicator
+#### Lab 8: ADCC Read Internal Temperature Indicator
 
 This lab demonstrates how to configure the ADCC to read the internal temperature indicator and provide device operating temperature value in degree Celsius and Fahrenheit.
 
@@ -210,8 +225,15 @@ Press switch SW0 to restart the execution from lab 1.
 
 ### Terminal View of the results
 
-For first 5 labs, results can be observed in terminal view by uncommenting the corresponding #defines in lab#.c files (*#define GRAPH_BASIC, #define GRAPH_ACCUMULATE, #define GRAPH_AVERAGE, #define GRAPH_BURST, #define GRAPH_LPF*).
-
+For first 6 labs, results can be observed in terminal view by commenting the corresponding #defines in adcc_*mode_name*_mode.c files.
+```
+#define GRAPH_BASIC
+#define GRAPH_ACCUMULATE
+#define GRAPH_AVERAGE
+#define GRAPH_BURST
+#define GRAPH_DIFFERENTIAL
+#define GRAPH_LPF
+```
 #### Lab 1: Basic single ended Analog-to-Digital Conversion Terminal View:
 
 ADCC result along with calculated light intensity will be printed on the terminal window every second.
@@ -220,24 +242,29 @@ ADCC result along with calculated light intensity will be printed on the termina
 
 #### Lab 2: ADCC Accumulate mode Terminal View:
 
-ADCC Count, ADCC result, ADCC accumulator value, ADCC filtered value will be printed on the terminal window every second. After 16 results the averaged value of 16 samples and converted Ambient light intensity will be printed on the terminal window.
+ADCC Count, ADCC result, ADCC accumulator value, ADCC filtered value will be printed on the terminal window every second. After 16 results the averaged value of 16 samples and converted ambient light intensity will be printed on the terminal window.
 
 ![Accumulate_terminal](images/accumulate_terminal.png)
 
 #### Lab 3: ADCC Average mode Terminal View:
-ADCC Count, ADCC result, ADCC accumulator value, ADCC filtered value will be printed on the terminal window every second. After ADRPT (16) results the averaged value of ADRPT samples (16) and converted Ambient light intensity will be printed on the terminal window.
+ADCC Count, ADCC result, ADCC accumulator value, ADCC filtered value will be printed on the terminal window every second. After ADRPT (16) results the averaged value of ADRPT samples (16) and converted ambient light intensity will be printed on the terminal window.
 
 ![Average_terminal](images/average_terminal.png)
 
 #### Lab 4: ADCC Burst Average mode Terminal View:
-ADCC filtered value and the averaged value of ADRPT (16) continuous samples and converted Ambient light intensity will be printed on the terminal window every second.
+ADCC filtered value and the averaged value of ADRPT (16) continuous samples and converted ambient light intensity will be printed on the terminal window every second.
 
 ![BurstAverage_terminal](images/burst_average_terminal.png)
 
 #### Lab 5: ADCC LPF mode Terminal View:
-ADCC result, ADCC filtered value and the converted Ambient light intensity will be printed on the terminal window every one second.
+ADCC result, ADCC filtered value and the converted ambient light intensity will be printed on the terminal window every one second.
 
 ![LPF_terminal](images/lpf_terminal.png)
+
+#### Lab 6: ADCC Differential mode Terminal View:
+ADCC result in single-ended measurement of Channel 1 (ambient light sensor), Channel 2 (FVR output) and differential mode measurement will be printed on the terminal window every one second.
+
+![Differential_terminal](images/differential_terminal.png)
 
 ## Peripheral Configuration
 
@@ -250,10 +277,10 @@ Additional Links: [MCC Melody Technical Reference](https://onlinedocs.microchip.
 ##### Peripheral Configuration Summary
 | Peripherals               | Configuration                                                                                                                                                                                                                                                                                                                                                                                                  | Usage                                                                         |
 |---------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------|
-|    Clock Control    |    Clock Control:<br>Clock source –   HFINTOSC<br>HF Internal Clock – 1MHz<br>Clock Divider   – 1                                                                                                                                                                                                                                                                                                         |    1 MHz System  clock                                                                     |
+|    Clock Control    |    Clock Control:<br>Clock source –   HFINTOSC<br>HF Internal Clock – 4MHz<br>Clock Divider   – 1                                                                                                                                                                                                                                                                                                         |    4 MHz System  clock                                                                     |
 |    TMR2               |    Enable Timer<br>Control Mode – Roll over pulse<br>Start/Reset Option – Software Control<br>Clock Source - LFINTOSC<br>Polarity – Rising edge<br>Prescaler – 1:128<br>Postscaler – 1:1<br>Time Period – 1s<br>                                                                                                                                                                  |    Used to auto-trigger ADCC                                           |
 |    TMR4               |    Enable Timer<br>Control Mode – Monostable<br>External Reset Source – T4INPPS pin <br>Start/Reset Option – Starts on rising edge on TMR4_ers <br>Clock Source – LFINTOSC<br>Polarity – Rising edge<br>Prescaler – 1:16<br>Postscaler – 1:1<br>Time Period – 0.1s<br>  Timer Interrupt Enabled                                                                                                                                                                |    Used in monostable mode to automate switch debouncing                |     
-|    ADCC               |    Input Configuration – Single-ended mode<br>Operating mode – Basic mode<br>Result alignment – Right justified<br>Positive reference – Vdd<br>Auto-conversion trigger – disabled <br>Clock source – Fosc<br>Clock divider – Fosc/2<br>ADI Interrupt Enable – Enabled<br> ADTI Interrupt Enable – Enabled  <br>                     |   Used for measuring light intensity of Ambient 7 sensor <br>   <br>  |
+|    ADCC               |    Input Configuration – Single-ended mode<br>Operating mode – Basic mode<br>Result alignment – Right justified<br>Positive reference – Vdd<br>Auto-conversion trigger – disabled <br>Clock source – Fosc<br>Clock divider – Fosc/4<br>ADI Interrupt Enable – Enabled<br> ADTI Interrupt Enable – Enabled  <br>                     |   Used for measuring light intensity of Ambient 7 sensor <br>   <br>  |
 |    FVR                |    FVR Enabled<br>FVR_buffer 1 Gain   – 2x  <br> Enabled Temperature sensor     <br> Voltage Range Selection – Hi_range                                                                                                                                                                                                                                                                                                                                                                |    Positive   reference voltage to ADCC |                                                                                                                                                                                                                                                                                                                                                                                           
 |    UART                 | UART1 Driver <br><br> Requested Baudrate – 19200 <br> UART PLIB Selector – EUSART1<br>      <br>EUSART1 PLIB<br><br> Redirect STDIO to EUSART     <br>Enable Receive<br> Enable Transmit<br>  Enable Serial Port                                                                                                                                                                                                     |    Send data to PC terminal   |
 
@@ -300,4 +327,4 @@ Additional Links: [MCC Melody Technical Reference](https://onlinedocs.microchip.
 
 ## Summary
 
-The labs in this code example demonstrates various computation modes such as accumulate, average, burst average and low pass filtering of the 12-bit ADCC available in PIC16F17146 and PIC16F18146 family of microcontrollers. The features of ADCC such as operation in sleep mode, threshold comparison and reading the on-board temperature sensor is also discussed in this example.
+The labs in this code example demonstrates various computation modes such as accumulate, average, burst average and low pass filtering of the 12-bit ADCC available in PIC16F17146 and PIC16F18146 family of microcontrollers. The features of ADCC such as single-ended and differential mode, operation in sleep mode, threshold comparison and reading the on-board temperature sensor is also discussed in this example.

@@ -4,7 +4,7 @@
     "content": {
         "metaDataVersion": "1.3.0",
         "name": "com.microchip.mcu8.mplabx.project.pic16f17146-adcc-getting-started-mplab-mcc",
-        "version": "1.0.0",
+        "version": "1.1.0",
         "displayName": "Getting Started with ADCC modes on PIC16F17146 Microcontroller",
         "projectName": "pic16f17146-adcc-getting-started-mplab-mcc",
         "shortDescription": "This code example demonstrates usage of various ADCC modes of PIC microcontroller. Compatible PIC16F17146 and PIC16F18146 family of MCUs are: PIC16F17146, PIC16F17125, PIC16F17114, PIC16F18146, PIC16F18125, PIC16F18114",
@@ -20,7 +20,7 @@
         ],
         "dfp": {
             "name": "PIC16F1xxxx_DFP",
-            "semverRange": "^1.13.178"
+            "semverRange": "^1.14.187"
         },
         "configurator": {
             "name": "MCC",

@@ -50,7 +50,7 @@
 #define  TIMER_PERIOD  (242)
 #endif
 
-#define ACCUMULATION_COUNT (16) // Number of ADC samples to be accumulated for averaging
+#define ACCUMULATION_COUNT (16) // Number of ADCC samples to be accumulated for averaging
 /*
                              Application    
  */
@@ -59,9 +59,9 @@
   @Summary
     Performs the ADCC Accumulate mode Lab.
   @Description
- Read the analog channel connected to Ambient Light sensor using ADCC in Accumulate mode.
- * Display the ADC conversion count, ADC results, ADC accumulator, ADC filtered value and 
- * corresponding Light intensity on graph or terminal window. * 
+ * Read the analog channel connected to Ambient Light sensor using ADCC in Accumulate mode.
+ * Display the ADCC conversion count, ADCC results, ADCC accumulator, ADCC filtered value and 
+ * corresponding Light intensity on graph or terminal window.  
   @Preconditions
     SYSTEM_Initialize() functions should have been called before calling this function.
   @Param
@@ -78,10 +78,10 @@ void AdccAccumulateMode(bool initRequired)
     if (initRequired == true)
     {
         printf("\r\n\n\nLab 2: ADCC in Accumulate mode");
-        printf("\r\n\nPress switch S1 to go to the next lab.");
+        printf("\r\n\nPress switch SW0 to go to the next lab.");
         ADCC_ClearAccumulator();
         lightIntensity = 0;
-        Timer2_PeriodCountSet(TIMER_PERIOD); // Set ADC auto trigger interval for terminal/graphical view
+        Timer2_PeriodCountSet(TIMER_PERIOD); // Set ADCC auto trigger interval for terminal/graphical view
         Timer2_Start();
         ADCC_Initialize_Accumulate_Mode();
         ADPCH = Ambient_AN; // Select the analog channel to read ambient light
@@ -125,7 +125,7 @@ void AdccAccumulateMode(bool initRequired)
             adcFilter = ADCC_GetFilterValue(); // Read average ADC value
             CalculateLightIntensity(adcFilter); // Calculate light intensity from average ADC reading
 #ifndef GRAPH_ACCUMULATE
-            printf("\r\n\nLab2: Accumulate mode. Average of %d ADC results is %d", ACCUMULATION_COUNT, adcFilter);
+            printf("\r\n\nLab 2: Accumulate mode. Average of %d ADC results is %d", ACCUMULATION_COUNT, adcFilter);
             printf("\r\nLight Intensity = %d lx", lightIntensity);
 #endif
             ADCC_ClearAccumulator(); // Clear the ADC accumulator
@@ -136,14 +136,20 @@ void AdccAccumulateMode(bool initRequired)
 }
 
 /**
-This function initializes ADCC in Accumulate mode
+  @Summary
+    This function initializes ADCC in Accumulate mode
+  @Description
  * ADCC mode: Accumulate, 
- * ADC result right shift count = 4 (for average of 16 ADC result counts), 
- * Voltage reference for ADC = VDD,
- * ADC auto trigger using timer 2 overflow, 
- * Enable ADC conversion done interrupt
-@param none 
-\returns none 
+ * ADCC result right shift count = 4 (for average of 16 ADCC result counts), 
+ * Voltage reference for ADCC = FVR (2.048V),
+ * ADCC auto trigger using timer 2 overflow, 
+ * Enable ADCC conversion done interrupt
+  @Preconditions
+    none
+  @Param
+    none
+  @Returns
+    None
  */
 void ADCC_Initialize_Accumulate_Mode(void)
 {
@@ -186,12 +192,12 @@ void ADCC_Initialize_Accumulate_Mode(void)
     ADCON3 = 0x10;
     // ADMATH registers not updated; 
     ADSTAT = 0x00;
-    // ADNREF VSS; ADPREF VDD; 
-    ADREF = 0x00;
+    //ADPREF FVR; 
+    ADREF = 0x3;
     // ADACT TMR2; 
     ADACT = 0x04;
-    // ADCS FOSC/2; 
-    ADCLK = 0x00;
+    //ADCCS FOSC/4; 
+    ADCLK = 0x1;
     //GO_nDONE undefined; ADIC single-ended mode; ADFM right justified; ADCS FOSC; ADCONT disabled; ADON enabled; 
     ADCON0 = 0x84;
 

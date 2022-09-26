@@ -53,10 +53,10 @@
   @Summary
     Performs the ADCC operation in Sleep mode Lab.
   @Description
- Read the analog channel connected to Ambient Light sensor when MCU is in sleep mode.
-ADC works in sleep mode and will not display any result on terminal window if ADC results are greater than lower threshold and less than upper threshold
-if ADC results are above Upper threshold then MCU wakes up and displays the warning that the light intensity is above upper threshold of 5000 lx
-if ADC results are below Lower threshold then MCU wakes up and displays the warning that the light intensity is below lower threshold of 200 lx  
+* Read the analog channel connected to Ambient Light sensor when MCU is in sleep mode.
+* ADC works in sleep mode and will not display any result on terminal window if ADC results are greater than lower threshold and less than upper threshold
+* if ADC results are above Upper threshold then MCU wakes up and displays the warning that the light intensity is above upper threshold of 5000 lx
+* if ADC results are below Lower threshold then MCU wakes up and displays the warning that the light intensity is below lower threshold of 200 lx  
  * @Preconditions
     SYSTEM_Initialize() functions should have been called before calling this function.
   @Param
@@ -70,8 +70,8 @@ void AdccInSleepMode(bool initRequired)
 
     if (initRequired == true)
     {
-        printf("\r\n\n\nLab 6: ADCC in Sleep mode");
-        printf("\r\n\nPress switch S1 to go to the next lab.");
+        printf("\r\n\n\nLab 7: ADCC in Sleep mode");
+        printf("\r\n\nPress switch SW0 to go to the next lab.");
         CPUDOZEbits.IDLEN = CLEAR; // Clear idle enable bit so than MCU will go to sleep mode when SLEEP instruction is executed
         ADCC_Initialize_Sleep_Mode();
     }
@@ -121,12 +121,18 @@ void AdccInSleepMode(bool initRequired)
 }
 
 /**
-This function initializes ADC for ADC conversion in Sleep mode,
+  @Summary
+    This function initializes ADC for ADC conversion in Sleep mode
+  @Description
  *  ADCC mode burst average, average of 32 ADC results, Voltage reference for ADC = VDD,
- *Continuous sampling enabled, Stop on Interrupt, Enable ADC Threshold interrupt, 
+ * Continuous sampling enabled, Stop on Interrupt, Enable ADCC Threshold interrupt, 
  * lower Threshold=205=500lx, upper threshold =820=2000lx
-@param none 
-\returns none 
+  @Preconditions
+    none
+  @Param
+    none
+  @Returns
+    None
  */
 void ADCC_Initialize_Sleep_Mode(void)
 {
@@ -169,12 +175,12 @@ void ADCC_Initialize_Sleep_Mode(void)
     ADCON3 = 0x5C;
     // ADMATH registers not updated; 
     ADSTAT = 0x00;
-    // ADNREF VSS; ADPREF VDD; 
-    ADREF = 0x00;
+      //ADPREF FVR; 
+    ADREF = 0x3;
     // ADACT disabled; 
     ADACT = 0x00;
-    // ADCS FOSC/2; 
-    ADCLK = 0x00;
+    //ADCCS FOSC/4; 
+    ADCLK = 0x1;
     // ADGO stop; ADFM right; ADON enabled; ADCS Frc; ADCONT enabled; 
     ADCON0 = 0xD4;
 

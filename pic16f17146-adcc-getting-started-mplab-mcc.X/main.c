@@ -61,9 +61,10 @@ int main(void)
     ADCC_SetADIInterruptHandler(ADCC_UserInterruptHandler);  
     ADCC_SetADTIInterruptHandler(ADCC_UserThresholdInterruptHandler); 
     Timer4_OverflowCallbackRegister(TMR4_UserInterruptHandler);
-
+    
+    while(!(UART1.IsTxReady));
     printf("\r\n\nGetting Started with ADCC using PIC16F17146");
-    printf("\r\n\nPress switch S1 to start the Lab 1");
+    printf("\r\n\nPress switch SW0 to start the Lab 1");
     
     while(1)
     {

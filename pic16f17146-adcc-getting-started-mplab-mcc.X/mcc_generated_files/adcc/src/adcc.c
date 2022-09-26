@@ -93,12 +93,12 @@ void ADCC_Initialize(void)
     ADCON3 = 0x0;
     //ADMATH registers not updated; 
     ADSTAT = 0x0;
-    //ADPREF VDD; 
-    ADREF = 0x0;
+    //ADPREF FVR; 
+    ADREF = 0x3;
     //ADACT disabled; 
     ADACT = 0x0;
-    //ADCCS FOSC/2; 
-    ADCLK = 0x0;
+    //ADCCS FOSC/4; 
+    ADCLK = 0x1;
     //GO_nDONE undefined; ADIC single-ended mode; ADFM right justified; ADCS FOSC; ADCONT disabled; ADON enabled; 
     ADCON0 = 0x84;
     

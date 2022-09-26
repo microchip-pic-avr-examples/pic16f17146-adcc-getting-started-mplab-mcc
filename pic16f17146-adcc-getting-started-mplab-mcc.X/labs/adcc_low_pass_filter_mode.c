@@ -58,8 +58,8 @@
   @Summary
     Performs the ADCC Low pass filter mode Lab.
   @Description
- Read the analog channel connected to Ambient Light sensor using ADCC in Low Pass Filter mode.
- * Display the ADC count, ADC result, ADC accumulator, ADC filtered value and corresponding Light intensity on graph or terminal window. * 
+ * Read the analog channel connected to Ambient Light sensor using ADCC in Low Pass Filter mode.
+ * Display the ADCC count, ADCC result, ADCC accumulator, ADCC filtered value and corresponding Light intensity on graph or terminal window. * 
   @Preconditions
     SYSTEM_Initialize() functions should have been called before calling this function.
   @Param
@@ -70,7 +70,6 @@
 void AdccLowPassFilterMode(bool initRequired)
 {
     uint16_t adcResult = 0;
-    uint24_t adcAccumulator = 0;
     uint16_t adcFilter = 0;
 
     if (initRequired == true)
@@ -79,7 +78,7 @@ void AdccLowPassFilterMode(bool initRequired)
         ADCNT = CLEAR;
         ADCC_ClearAccumulator();
         printf("\r\n\nLab 5: ADCC in Low pass filter mode");
-        printf("\r\n\nPress switch S1 to go to the next lab.");
+        printf("\r\n\nPress switch SW0 to go to the next lab.");
         Timer2_PeriodCountSet(TIMER_PERIOD); // Set ADC auto trigger interval for terminal/graphical view
         Timer2_Start();
         ADCC_Initialize_Low_Pass_Filter_Mode();
@@ -124,6 +123,21 @@ void AdccLowPassFilterMode(bool initRequired)
     }
 }
 
+/**
+  @Summary
+    This function initializes ADCC in Low Pass Filter mode
+  @Description
+ * ADCC mode: Low Pass Filter,
+ * ADCC repeat count : 16 
+ * ADCC Clock = FOSC/4, 
+ * Voltage reference for ADCC = FVR (2.048V)
+  @Preconditions
+    none
+  @Param
+    none
+  @Returns
+    None
+ */
 void ADCC_Initialize_Low_Pass_Filter_Mode(void)
 {
     // set the ADCC to the options selected in the User Interface
@@ -165,12 +179,12 @@ void ADCC_Initialize_Low_Pass_Filter_Mode(void)
     ADCON3 = 0x00;
     // ADMATH registers not updated; 
     ADSTAT = 0x00;
-    // ADNREF VSS; ADPREF VDD; 
-    ADREF = 0x00;
+      //ADPREF FVR; 
+    ADREF = 0x3;
     // ADACT TMR2; 
     ADACT = 0x04;
-    // ADCS FOSC/2; 
-    ADCLK = 0x00;
+    //ADCCS FOSC/4; 
+    ADCLK = 0x1;
     //GO_nDONE undefined; ADIC single-ended mode; ADFM right justified; ADCS FOSC; ADCONT disabled; ADON enabled; 
     ADCON0 = 0x84;
 

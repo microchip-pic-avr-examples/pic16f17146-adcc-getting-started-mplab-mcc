@@ -5,7 +5,7 @@
  * 
  * @ingroup  tmr4
  * 
- * @brief This is the generated driver implementation file for the TMR4 module.
+ * @brief API implementations for the TMR4 module.
  *
  * @version TMR4 Driver Version 3.0.1
  */
